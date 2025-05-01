@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Algorithm Visualizer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h2>Searching & Sorting Visualizer</h2>
+  <form id="algoForm">
+    <label for="array">Enter array (comma separated):</label>
+    <input type="text" id="array" required><br>
+    <label for="target">Search target (for searching only):</label>
+    <input type="text" id="target"><br>
+    <select id="algorithm">
+        <option value="bubble_sort">Bubble Sort</option>
+        <option value="insertion_sort">Insertion Sort</option>
+        <option value="selection_sort">Selection Sort</option>
+        <option value="quick_sort">Quick Sort</option>
+        <option value="merge_sort">Merge Sort</option>
+        <option value="linear_search">Linear Search</option>
+        <option value="binary_search">Binary Search</option>
+      </select>      
+    <button type="submit">Visualize</button>
+  </form>
+  <div id="output">
+    <img id="resultImg" src="" alt="Visualization will appear here">
+  </div>
+  <script>
+    document.getElementById("algoForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const array = document.getElementById("array").value;
+      const target = document.getElementById("target").value;
+      const algorithm = document.getElementById("algorithm").value;
+      const payload = { array, algorithm, target };
+
+      const response = await fetch("/visualize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      document.getElementById("resultImg").src = url;
+    });
+  </script>
+</body>
+</html>
